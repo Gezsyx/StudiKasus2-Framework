@@ -1,5 +1,6 @@
 Muhammad Abdan Annur (24090104)
 Amirul Madjid Ibrahim (24090101)
+Fajar Abdul Aziz (24090093)
 =======================================================
 
 # Studi Kasus 2 — E-commerce Management System (NestJS)
