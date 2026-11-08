@@ -1,3 +1,7 @@
+Muhammad Abdan Annur (24090104)
+Amirul Madjid Ibrahim (24090101)
+=======================================================
+
 # Studi Kasus 2 — E-commerce Management System (NestJS)
 
 Backend REST API untuk pengelolaan toko online: **produk, kategori, pelanggan, pesanan, dan detail pesanan**, dengan aturan bisnis stok, harga saat transaksi, dan alur status pesanan.
