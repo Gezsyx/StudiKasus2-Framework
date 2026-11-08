@@ -1,0 +1,295 @@
+# Dijalankan terhadap PostgreSQL 16 (Docker Compose), database studikasus2uts, 2026-11-07 15:42
+> node scripts/run-postman.mjs
+Menjalankan collection ke http://localhost:3001
+newman
+E-commerce Management System API
+□ 1. Categories
+└ Buat kategori (201)
+  POST http://localhost:3001/categories [201 Created, 319B, 66ms]
+  √  Status 201
+  √  Data tersimpan
+└ Buat kategori duplikat (409)
+  POST http://localhost:3001/categories [409 Conflict, 338B, 6ms]
+  √  Status 409
+  √  Pesan error sesuai
+└ Buat kategori nama kosong (400)
+  POST http://localhost:3001/categories [400 Bad Request, 323B, 3ms]
+  √  Status 400
+  √  message berupa array
+└ Buat kategori dengan properti tak dikenal (400)
+  POST http://localhost:3001/categories [400 Bad Request, 328B, 4ms]
+  √  Status 400
+  √  Pesan error sesuai
+└ Daftar kategori (200)
+  GET http://localhost:3001/categories [200 OK, 316B, 6ms]
+  √  Status 200
+  √  Memuat kategori baru
+└ Detail kategori (200)
+  GET http://localhost:3001/categories/4 [200 OK, 328B, 6ms]
+  √  Status 200
+  √  Relasi products ada
+└ Detail kategori ID tidak ada (404)
+  GET http://localhost:3001/categories/999999 [404 Not Found, 325B, 6ms]
+  √  Status 404
+└ Detail kategori ID bukan angka (400)
+  GET http://localhost:3001/categories/abc [400 Bad Request, 343B, 3ms]
+  √  Status 400
+└ Ubah kategori (200)
+  PATCH http://localhost:3001/categories/4 [200 OK, 314B, 40ms]
+  √  Status 200
+  √  Deskripsi berubah
+└ Ubah kategori ID tidak ada (404)
+  PATCH http://localhost:3001/categories/999999 [404 Not Found, 325B, 7ms]
+  √  Status 404
+□ 2. Products
+└ Buat produk 1 (201)
+  POST http://localhost:3001/products [201 Created, 427B, 61ms]
+  √  Status 201
+  √  Relasi kategori ikut dikembalikan
+└ Buat produk 2 (201)
+  POST http://localhost:3001/products [201 Created, 416B, 64ms]
+  √  Status 201
+└ Buat produk tidak valid (400)
+  POST http://localhost:3001/products [400 Bad Request, 363B, 2ms]
+  √  Status 400
+  √  Pesan error sesuai
+└ Buat produk kategori tidak ada (404)
+  POST http://localhost:3001/products [404 Not Found, 325B, 5ms]
+  √  Status 404
+  √  Pesan error sesuai
+└ Daftar produk (200)
+  GET http://localhost:3001/products [200 OK, 601B, 5ms]
+  √  Status 200
+  √  Array produk
+└ Filter produk per kategori (200)
+  GET http://localhost:3001/products?categoryId=4 [200 OK, 601B, 6ms]
+  √  Status 200
+  √  Semua produk di kategori itu
+└ Filter produk categoryId bukan angka (400)
+  GET http://localhost:3001/products?categoryId=abc [400 Bad Request, 343B, 3ms]
+  √  Status 400
+└ Detail produk (200)
+  GET http://localhost:3001/products/6 [200 OK, 422B, 6ms]
+  √  Status 200
+  √  Stok awal 10
+└ Detail produk ID tidak ada (404)
+  GET http://localhost:3001/products/999999 [404 Not Found, 323B, 5ms]
+  √  Status 404
+└ Ubah produk (200)
+  PATCH http://localhost:3001/products/6 [200 OK, 429B, 12ms]
+  √  Status 200
+  √  Nama berubah
+└ Ubah produk ke kategori tidak ada (404)
+  PATCH http://localhost:3001/products/6 [404 Not Found, 325B, 10ms]
+  √  Status 404
+└ Ubah produk ID tidak ada (404)
+  PATCH http://localhost:3001/products/999999 [404 Not Found, 323B, 5ms]
+  √  Status 404
+□ 3. Customers
+└ Buat pelanggan (201)
+  POST http://localhost:3001/customers [201 Created, 347B, 41ms]
+  √  Status 201
+└ Buat pelanggan email duplikat (409)
+  POST http://localhost:3001/customers [409 Conflict, 345B, 5ms]
+  √  Status 409
+  √  Pesan error sesuai
+└ Buat pelanggan email tidak valid (400)
+  POST http://localhost:3001/customers [400 Bad Request, 321B, 3ms]
+  √  Status 400
+  √  Pesan error sesuai
+└ Daftar pelanggan (200)
+  GET http://localhost:3001/customers [200 OK, 344B, 7ms]
+  √  Status 200
+└ Detail pelanggan (200)
+  GET http://localhost:3001/customers/4 [200 OK, 354B, 7ms]
+  √  Status 200
+  √  Relasi orders ada
+└ Detail pelanggan ID tidak ada (404)
+  GET http://localhost:3001/customers/999999 [404 Not Found, 326B, 5ms]
+  √  Status 404
+└ Ubah pelanggan (200)
+  PATCH http://localhost:3001/customers/4 [200 OK, 341B, 41ms]
+  √  Status 200
+  √  Telepon berubah
+└ Ubah pelanggan ID tidak ada (404)
+  PATCH http://localhost:3001/customers/999999 [404 Not Found, 326B, 6ms]
+  √  Status 404
+□ 4. Orders (aturan bisnis)
+└ Buat pesanan, produk sama digabung (201)
+  POST http://localhost:3001/orders [201 Created, 890B, 56ms]
+  √  Status 201
+  √  Status pending, total 500000, 2 item
+  √  Item membawa informasi produk
+  √  Relasi pelanggan ikut dikembalikan
+└ Stok produk 1 berkurang jadi 7 (200)
+  GET http://localhost:3001/products/6 [200 OK, 428B, 6ms]
+  √  Status 200
+  √  Stok 7
+└ Pesanan stok tidak cukup (400)
+  POST http://localhost:3001/orders [400 Bad Request, 364B, 15ms]
+  √  Status 400
+  √  Pesan error sesuai
+└ Pesanan pelanggan tidak ada (404)
+  POST http://localhost:3001/orders [404 Not Found, 326B, 7ms]
+  √  Status 404
+└ Pesanan produk tidak ada (404)
+  POST http://localhost:3001/orders [404 Not Found, 323B, 13ms]
+  √  Status 404
+└ Pesanan tanpa item (400)
+  POST http://localhost:3001/orders [400 Bad Request, 337B, 2ms]
+  √  Status 400
+└ Pesanan quantity 0 (400)
+  POST http://localhost:3001/orders [400 Bad Request, 339B, 3ms]
+  √  Status 400
+└ Stok tidak berubah setelah pesanan gagal (200)
+  GET http://localhost:3001/products/6 [200 OK, 428B, 6ms]
+  √  Status 200
+  √  Stok 7
+└ Daftar semua pesanan tanpa filter (200)
+  GET http://localhost:3001/orders [200 OK, 887B, 6ms]
+  √  Status 200
+  √  Berisi pesanan baru
+└ Daftar pesanan dengan filter (200)
+  GET http://localhost:3001/orders?customerId=4&status=pending [200 OK, 887B, 6ms]
+  √  Status 200
+  √  Berisi pesanan baru
+└ Filter status tidak valid (400)
+  GET http://localhost:3001/orders?status=ngawur [400 Bad Request, 340B, 2ms]
+  √  Status 400
+└ Detail pesanan beserta produk (200)
+  GET http://localhost:3001/orders/17 [200 OK, 885B, 8ms]
+  √  Status 200
+  √  Detail lengkap
+└ Detail pesanan ID tidak ada (404)
+  GET http://localhost:3001/orders/999999 [404 Not Found, 324B, 5ms]
+  √  Status 404
+└ Naikkan harga produk 1 jadi 200000 (200)
+  PATCH http://localhost:3001/products/6 [200 OK, 428B, 65ms]
+  √  Status 200
+└ Harga di detail pesanan tetap 150000 (snapshot)
+  GET http://localhost:3001/order-items?orderId=17 [200 OK, 617B, 5ms]
+  √  Status 200
+  √  unitPrice snapshot
+└ Ubah item pesanan saat pending (200)
+  PATCH http://localhost:3001/orders/17 [200 OK, 705B, 50ms]
+  √  Status 200
+  √  Total dihitung ulang 4 x 200000
+└ Stok produk 1 jadi 6 (200)
+  GET http://localhost:3001/products/6 [200 OK, 428B, 8ms]
+  √  Status 200
+  √  Stok 6
+└ Stok produk 2 kembali 5 (200)
+  GET http://localhost:3001/products/7 [200 OK, 411B, 6ms]
+  √  Status 200
+  √  Stok 5
+└ Status loncat pending→shipped (409)
+  PATCH http://localhost:3001/orders/17 [409 Conflict, 350B, 10ms]
+  √  Status 409
+  √  Pesan error sesuai
+└ Status bukan enum (400)
+  PATCH http://localhost:3001/orders/17 [400 Bad Request, 388B, 3ms]
+  √  Status 400
+└ Status pending→paid (200)
+  PATCH http://localhost:3001/orders/17 [200 OK, 702B, 44ms]
+  √  Status 200
+  √  Status paid
+└ Ubah item saat paid (409)
+  PATCH http://localhost:3001/orders/17 [409 Conflict, 359B, 12ms]
+  √  Status 409
+└ Hapus pesanan paid (409)
+  DELETE http://localhost:3001/orders/17 [409 Conflict, 337B, 10ms]
+  √  Status 409
+└ Ubah pesanan ID tidak ada (404)
+  PATCH http://localhost:3001/orders/999999 [404 Not Found, 324B, 7ms]
+  √  Status 404
+└ Batalkan pesanan paid→cancelled (200)
+  PATCH http://localhost:3001/orders/17 [200 OK, 708B, 46ms]
+  √  Status 200
+  √  Status cancelled
+└ Stok produk 1 kembali 10 (200)
+  GET http://localhost:3001/products/6 [200 OK, 429B, 6ms]
+  √  Status 200
+  √  Stok 10
+└ Hapus pesanan cancelled (200)
+  DELETE http://localhost:3001/orders/17 [200 OK, 268B, 42ms]
+  √  Status 200
+└ Pesanan sudah terhapus (404)
+  GET http://localhost:3001/orders/17 [404 Not Found, 320B, 6ms]
+  √  Status 404
+└ Hapus pesanan ID tidak ada (404)
+  DELETE http://localhost:3001/orders/999999 [404 Not Found, 324B, 6ms]
+  √  Status 404
+□ 5. Order Items
+└ Buat pesanan baru untuk uji item (201)
+  POST http://localhost:3001/orders [201 Created, 710B, 47ms]
+  √  Status 201
+└ Daftar item per pesanan (200)
+  GET http://localhost:3001/order-items?orderId=20 [200 OK, 436B, 5ms]
+  √  Status 200
+  √  1 item dengan produk
+└ Detail item (200)
+  GET http://localhost:3001/order-items/13 [200 OK, 586B, 8ms]
+  √  Status 200
+  √  Relasi product & order
+└ Detail item ID tidak ada (404)
+  GET http://localhost:3001/order-items/999999 [404 Not Found, 331B, 5ms]
+  √  Status 404
+└ Detail item ID bukan angka (400)
+  GET http://localhost:3001/order-items/abc [400 Bad Request, 343B, 3ms]
+  √  Status 400
+□ 6. Integritas relasi & pembersihan
+└ Hapus produk yang dipakai pesanan (409)
+  DELETE http://localhost:3001/products/6 [409 Conflict, 359B, 11ms]
+  √  Status 409
+└ Hapus kategori yang masih punya produk (409)
+  DELETE http://localhost:3001/categories/4 [409 Conflict, 330B, 11ms]
+  √  Status 409
+└ Hapus pelanggan yang masih punya pesanan (409)
+  DELETE http://localhost:3001/customers/4 [409 Conflict, 328B, 7ms]
+  √  Status 409
+└ Hapus pesanan pending (200)
+  DELETE http://localhost:3001/orders/20 [200 OK, 268B, 42ms]
+  √  Status 200
+└ Hapus produk 1 (200)
+  DELETE http://localhost:3001/products/6 [200 OK, 266B, 39ms]
+  √  Status 200
+└ Hapus produk 2 (200)
+  DELETE http://localhost:3001/products/7 [200 OK, 266B, 40ms]
+  √  Status 200
+└ Hapus kategori (200)
+  DELETE http://localhost:3001/categories/4 [200 OK, 268B, 42ms]
+  √  Status 200
+└ Hapus pelanggan (200)
+  DELETE http://localhost:3001/customers/4 [200 OK, 269B, 40ms]
+  √  Status 200
+└ Produk sudah terhapus (404)
+  GET http://localhost:3001/products/6 [404 Not Found, 318B, 7ms]
+  √  Status 404
+└ Hapus kategori ID tidak ada (404)
+  DELETE http://localhost:3001/categories/999999 [404 Not Found, 325B, 5ms]
+  √  Status 404
+└ Hapus produk ID tidak ada (404)
+  DELETE http://localhost:3001/products/999999 [404 Not Found, 323B, 5ms]
+  √  Status 404
+└ Hapus pelanggan ID tidak ada (404)
+  DELETE http://localhost:3001/customers/999999 [404 Not Found, 326B, 5ms]
+  √  Status 404
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │               76 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            test-scripts │               76 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │              113 │                0 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 7.6s                                      │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 12.54kB (approx)                         │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 16ms [min: 2ms, max: 66ms, s.d.: 18ms] │
+└───────────────────────────────────────────────────────────────┘

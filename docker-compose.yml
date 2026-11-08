@@ -1,0 +1,25 @@
+# PostgreSQL untuk development. Nilainya dibaca otomatis dari file .env di folder yang sama.
+#   docker compose up -d     -> jalankan
+#   docker compose down      -> hentikan (data tetap ada di volume)
+#   docker compose down -v   -> hentikan dan HAPUS semua data
+services:
+  postgres:
+    image: postgres:16
+    container_name: studikasus2-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_DATABASE}']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres_data:
